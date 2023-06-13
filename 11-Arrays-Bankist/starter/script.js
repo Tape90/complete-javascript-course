@@ -259,35 +259,35 @@ const dogs = [
 
 // GOOD LUCK 😀
 
-dogs.forEach(dog => {
-  dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28);
-});
+// dogs.forEach(dog => {
+//   dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28);
+// });
 
-console.log(dogs);
+// console.log(dogs);
 
-const dogSarah = dogs.find(dog => dog.owners.includes('Sarah'));
-console.log(dogSarah);
-console.log(
-  `Sarah's dog is eating too ${
-    dogSarah.curFood > dogSarah.recFood ? 'much' : 'little'
-  } `
-);
+// const dogSarah = dogs.find(dog => dog.owners.includes('Sarah'));
+// console.log(dogSarah);
+// console.log(
+//   `Sarah's dog is eating too ${
+//     dogSarah.curFood > dogSarah.recommendedFood ? 'much' : 'little'
+//   } `
+// );
 
-const ownersEatTooMuch = [];
-const ownersEatTooLittle = [];
+// const ownersEatTooMuch = [];
+// const ownersEatTooLittle = [];
 
-dogs.forEach(dog => {
-  if (dog.curFood * 1.1 > dog.recommendedFood) {
-    ownersEatTooMuch.push(dog.owners);
-  } else if (dog.curFood * 0.9 < dog.recommendedFood) {
-    ownersEatTooLittle.push(dog.owners);
-  }
-});
+// dogs.forEach(dog => {
+//   if (dog.curFood * 1.1 > dog.recommendedFood) {
+//     ownersEatTooMuch.push(dog.owners);
+//   } else if (dog.curFood * 0.9 < dog.recommendedFood) {
+//     ownersEatTooLittle.push(dog.owners);
+//   }
+// });
 
-console.log(
-  `${ownersEatTooLittle.flat().join(' and ')}'s dogs eat too little!`
-);
-console.log(`${ownersEatTooMuch.flat().join(' and ')}'s dogs eat too much!`);
+// console.log(
+//   `${ownersEatTooLittle.flat().join(' and ')}'s dogs eat too little!`
+// );
+// console.log(`${ownersEatTooMuch.flat().join(' and ')}'s dogs eat too much!`);
 
 // const bankDepositSum = accounts
 //   .flatMap(acc => acc.movements)
@@ -487,3 +487,31 @@ GOOD LUCK 😀
 // console.log(accounts);
 // const account = accounts.find(acc => acc.owner === 'Jessica Davis');
 // console.log(account);
+
+function isPalindrome(x) {
+  const numArray = [...String(x)];
+
+  let controlBool = false;
+  console.log(
+    '🚀 ~ file: script.js:495 ~ isPalindrome ~ controlBool:',
+    controlBool
+  );
+
+  for (let i = 0; i < numArray.length; i++) {
+    //console.log(numArray[i]);
+
+    let controlBehind = numArray[numArray.length - 1 - i];
+    //console.log(controlBehind);
+
+    if (numArray[i] === controlBehind) {
+      controlBool = true;
+    } else {
+      return false;
+    }
+  }
+  return controlBool;
+}
+
+console.log(isPalindrome(12121212121));
+console.log(isPalindrome(-121));
+console.log(isPalindrome(10));
