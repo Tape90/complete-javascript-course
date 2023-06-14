@@ -130,6 +130,177 @@ console.log(compact([0, 1, false, 2, "", 3]));
 // }
 // console.log(account.latest)
 
+const getCustomersTotalSpending = function (customerId) {
+  const customer = customers.find(customer => customer.id === customerId);
+  const orderSums = [];
+  let totalSums = 0.0;
+
+  if (!customer) {
+    return console.log('Customer not found');
+  }
+
+  const myOrdersIds = orders
+    .filter(order => order.customerId === customerId)
+    .map(myOrder => myOrder.id);
+
+  myOrdersIds.forEach(myOrderId => {
+    orderSums.push(
+      Math.round(
+        orderItems
+          .filter(orderItem => orderItem.orderId === myOrderId)
+          .map(myOrderItem => myOrderItem.price * myOrderItem.quantity)
+          .reduce((acc, val) => acc + val, 0) * 100
+      ) / 100 //Kaufmännisch runden
+    );
+  });
+
+  totalSums = orderSums.reduce((acc, val) => acc + val, 0);
+
+  return console.log(
+    `${customer.name} hat bisher einen Umsatz von ${totalSums.toFixed(2)}€`
+  );
+};
+
+const getTotalProductsSelled = function (productID) {
+  const product = products.find(product => product.id === productID);
+
+  if (!product) return console.log('Product not found!');
+
+  let productTotalSum = 0.0;
+  let productTotalSelled = 0;
+
+  const productOrderItemsArray = orderItems.filter(
+    orderItem => orderItem.productId === productID
+  );
+
+  productTotalSum = productOrderItemsArray
+    .map(order => order.price * order.quantity)
+    .reduce((acc, val) => acc + val, 0);
+
+  productTotalSelled = productOrderItemsArray
+    .map(order => order.quantity)
+    .reduce((acc, val) => acc + val, 0);
+
+  return console.log(
+    `${
+      product.name
+    } wurde insgesamt ${productTotalSelled}x verkauft und hat einen Umsatz von ${productTotalSum.toFixed(
+      2
+    )}€ erzielt`
+  );
+};
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2022 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+//Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+// const mike = new Student('Mike', 2000, 'Computer Science');
+// console.table(mike);
+// mike.introduce();
+// mike.calcAge();
+
+const Car = function (make, speed) {
+  this.speed = speed;
+  this.make = make;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.make} is going at ${this.speed} km/h`);
+};
+
+Car.prototype.brake = function () {
+  this.speed = this.speed - 5;
+  console.log(`${this.make} is going at ${this.speed} km/h`);
+};
+Car.prototype.getspeedUS = function () {
+  return this.speed / 1.6;
+};
+
+Car.prototype.setspeedUS = function (speed) {
+  this.speed = speed * 1.6;
+};
+
+const EV = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+EV.prototype = Object.create(Car.prototype);
+
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+EV.prototype.accelerate = function () {
+  this.speed = this.speed + 20;
+  this.charge = this.charge - 1;
+  console.log(
+    `${this.make} going at ${this.speed} km/h, with a charge of ${this.charge}`
+  );
+};
+
+const tesla = new EV('Tesla', 120, 23);
+
+tesla.accelerate();
+tesla.brake();
+tesla.chargeBattery(90);
+tesla.accelerate();
+console.log(tesla.getspeedUS());
+
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movments = [];
+    this.local = navigator.language;
+  }
+
+  deposit(val) {
+    this.movments.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    const amount = this.movments.reduce((acc, current) => acc + current, 0);
+    return amount * 10 > val ? true : false;
+  }
+
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+    } else {
+      console.log('Loan rejected');
+    }
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+acc1.deposit(1000);
+acc1.withdraw(500);
+acc1.requestLoan(10000);
+console.table(acc1);
+
 // Mock data for products
 const products = [
   { id: 1, name: 'Product 1', price: 10.99 },
@@ -148,8 +319,9 @@ const customers = [
 
 // Mock data for order items
 const orderItems = [
+  //Erweitern um z.B. Datum und dann das Beste und schlechteste Jahr auslesen
   {
-    id: 1,
+    id: 1, // Top Kunde pro Jahr, wie hat sich der Kund Pro Jahr entwickelt etc. (Daten von ChatGPT um Datum ergänzen + mehr Daten)
     orderId: 1,
     productId: 2,
     productName: 'Product 2',
@@ -265,66 +437,6 @@ const orders = [
 //Wie viel Geld hat jeder Kunde bisher ausgegeben?
 
 //aus der Order die customerID auslesen un die dazugehörige "order"id. Danach die Order ID's eines Nutzers in den orderItems suchen und alle zusammen addieren. Danach per customerID den Namen auslesen und alles ausgeben
-
-const getCustomersTotalSpending = function (customerId) {
-  const customer = customers.find(customer => customer.id === customerId);
-  const orderSums = [];
-  let totalSums = 0.0;
-
-  if (!customer) {
-    return console.log('Customer not found');
-  }
-
-  const myOrdersIds = orders
-    .filter(order => order.customerId === customerId)
-    .map(myOrder => myOrder.id);
-
-  myOrdersIds.forEach(myOrderId => {
-    orderSums.push(
-      Math.round(
-        orderItems
-          .filter(orderItem => orderItem.orderId === myOrderId)
-          .map(myOrderItem => myOrderItem.price * myOrderItem.quantity)
-          .reduce((acc, val) => acc + val, 0) * 100
-      ) / 100 //Kaufmännisch runden
-    );
-  });
-
-  totalSums = orderSums.reduce((acc, val) => acc + val, 0);
-
-  return console.log(
-    `${customer.name} hat bisher einen Umsatz von ${totalSums.toFixed(2)}€`
-  );
-};
-
-const getTotalProductsSelled = function (productID) {
-  const product = products.find(product => product.id === productID);
-
-  if (!product) return console.log('Product not found!');
-
-  let productTotalSum = 0.0;
-  let productTotalSelled = 0;
-
-  const productOrderItemsArray = orderItems.filter(
-    orderItem => orderItem.productId === productID
-  );
-
-  productTotalSum = productOrderItemsArray
-    .map(order => order.price * order.quantity)
-    .reduce((acc, val) => acc + val, 0);
-
-  productTotalSelled = productOrderItemsArray
-    .map(order => order.quantity)
-    .reduce((acc, val) => acc + val, 0);
-
-  return console.log(
-    `${
-      product.name
-    } wurde insgesamt ${productTotalSelled}x verkauft und hat einen Umsatz von ${productTotalSum.toFixed(
-      2
-    )}€ erzielt`
-  );
-};
 
 //getTotalProductsSelled(2);
 
