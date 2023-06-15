@@ -129,66 +129,8 @@ console.log(compact([0, 1, false, 2, "", 3]));
 //   }
 // }
 // console.log(account.latest)
+/*
 
-const getCustomersTotalSpending = function (customerId) {
-  const customer = customers.find(customer => customer.id === customerId);
-  const orderSums = [];
-  let totalSums = 0.0;
-
-  if (!customer) {
-    return console.log('Customer not found');
-  }
-
-  const myOrdersIds = orders
-    .filter(order => order.customerId === customerId)
-    .map(myOrder => myOrder.id);
-
-  myOrdersIds.forEach(myOrderId => {
-    orderSums.push(
-      Math.round(
-        orderItems
-          .filter(orderItem => orderItem.orderId === myOrderId)
-          .map(myOrderItem => myOrderItem.price * myOrderItem.quantity)
-          .reduce((acc, val) => acc + val, 0) * 100
-      ) / 100 //Kaufmännisch runden
-    );
-  });
-
-  totalSums = orderSums.reduce((acc, val) => acc + val, 0);
-
-  return console.log(
-    `${customer.name} hat bisher einen Umsatz von ${totalSums.toFixed(2)}€`
-  );
-};
-
-const getTotalProductsSelled = function (productID) {
-  const product = products.find(product => product.id === productID);
-
-  if (!product) return console.log('Product not found!');
-
-  let productTotalSum = 0.0;
-  let productTotalSelled = 0;
-
-  const productOrderItemsArray = orderItems.filter(
-    orderItem => orderItem.productId === productID
-  );
-
-  productTotalSum = productOrderItemsArray
-    .map(order => order.price * order.quantity)
-    .reduce((acc, val) => acc + val, 0);
-
-  productTotalSelled = productOrderItemsArray
-    .map(order => order.quantity)
-    .reduce((acc, val) => acc + val, 0);
-
-  return console.log(
-    `${
-      product.name
-    } wurde insgesamt ${productTotalSelled}x verkauft und hat einen Umsatz von ${productTotalSum.toFixed(
-      2
-    )}€ erzielt`
-  );
-};
 const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
@@ -300,6 +242,7 @@ acc1.deposit(1000);
 acc1.withdraw(500);
 acc1.requestLoan(10000);
 console.table(acc1);
+*/
 
 // Mock data for products
 const products = [
@@ -318,15 +261,18 @@ const customers = [
 ];
 
 // Mock data for order items
+
+//Erweitern um z.B. Datum und dann das Beste und schlechteste Jahr auslesen
+// Top Kunde pro Jahr, wie hat sich der Kund Pro Jahr entwickelt etc. (Daten von ChatGPT um Datum ergänzen + mehr Daten)
 const orderItems = [
-  //Erweitern um z.B. Datum und dann das Beste und schlechteste Jahr auslesen
   {
-    id: 1, // Top Kunde pro Jahr, wie hat sich der Kund Pro Jahr entwickelt etc. (Daten von ChatGPT um Datum ergänzen + mehr Daten)
+    id: 1,
     orderId: 1,
     productId: 2,
     productName: 'Product 2',
     price: 19.99,
     quantity: 3,
+    orderDate: '2022-03-12', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 2,
@@ -335,6 +281,7 @@ const orderItems = [
     productName: 'Product 3',
     price: 14.99,
     quantity: 2,
+    orderDate: '2022-05-05', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 3,
@@ -343,6 +290,7 @@ const orderItems = [
     productName: 'Product 1',
     price: 10.99,
     quantity: 1,
+    orderDate: '2021-12-28', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 4,
@@ -351,6 +299,7 @@ const orderItems = [
     productName: 'Product 3',
     price: 14.99,
     quantity: 1,
+    orderDate: '2023-01-15', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 5,
@@ -359,6 +308,7 @@ const orderItems = [
     productName: 'Product 1',
     price: 10.99,
     quantity: 2,
+    orderDate: '2022-08-07', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 6,
@@ -367,6 +317,7 @@ const orderItems = [
     productName: 'Product 2',
     price: 19.99,
     quantity: 1,
+    orderDate: '2023-03-20', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 7,
@@ -375,6 +326,7 @@ const orderItems = [
     productName: 'Product 3',
     price: 14.99,
     quantity: 3,
+    orderDate: '2022-09-10', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 8,
@@ -383,6 +335,7 @@ const orderItems = [
     productName: 'Product 1',
     price: 10.99,
     quantity: 2,
+    orderDate: '2022-06-25', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 9,
@@ -391,6 +344,7 @@ const orderItems = [
     productName: 'Product 2',
     price: 19.99,
     quantity: 4,
+    orderDate: '2021-10-18', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 10,
@@ -399,6 +353,7 @@ const orderItems = [
     productName: 'Product 3',
     price: 14.99,
     quantity: 2,
+    orderDate: '2022-11-30', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 11,
@@ -407,6 +362,7 @@ const orderItems = [
     productName: 'Product 1',
     price: 10.99,
     quantity: 1,
+    orderDate: '2022-02-14', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 12,
@@ -415,6 +371,7 @@ const orderItems = [
     productName: 'Product 2',
     price: 19.99,
     quantity: 3,
+    orderDate: '2022-09-01', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
   {
     id: 13,
@@ -423,6 +380,70 @@ const orderItems = [
     productName: 'Product 1',
     price: 10.99,
     quantity: 1,
+    orderDate: '2023-02-28', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 14,
+    orderId: 5,
+    productId: 2,
+    productName: 'Product 2',
+    price: 19.99,
+    quantity: 2,
+    orderDate: '2022-12-10', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 15,
+    orderId: 3,
+    productId: 3,
+    productName: 'Product 3',
+    price: 14.99,
+    quantity: 1,
+    orderDate: '2022-07-05', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 16,
+    orderId: 2,
+    productId: 1,
+    productName: 'Product 1',
+    price: 10.99,
+    quantity: 3,
+    orderDate: '2021-11-20', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 17,
+    orderId: 1,
+    productId: 2,
+    productName: 'Product 2',
+    price: 19.99,
+    quantity: 2,
+    orderDate: '2023-04-03', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 18,
+    orderId: 3,
+    productId: 1,
+    productName: 'Product 1',
+    price: 10.99,
+    quantity: 1,
+    orderDate: '2022-10-12', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 19,
+    orderId: 1,
+    productId: 2,
+    productName: 'Product 2',
+    price: 19.99,
+    quantity: 3,
+    orderDate: '2023-01-30', // Beispiel-Datum innerhalb der letzten 3 Jahre
+  },
+  {
+    id: 20,
+    orderId: 5,
+    productId: 3,
+    productName: 'Product 3',
+    price: 14.99,
+    quantity: 2,
+    orderDate: '2022-09-18', // Beispiel-Datum innerhalb der letzten 3 Jahre
   },
 ];
 
@@ -436,124 +457,264 @@ const orders = [
 
 //Wie viel Geld hat jeder Kunde bisher ausgegeben?
 
-//aus der Order die customerID auslesen un die dazugehörige "order"id. Danach die Order ID's eines Nutzers in den orderItems suchen und alle zusammen addieren. Danach per customerID den Namen auslesen und alles ausgeben
+const getCustomersTotalSpending = function (customerId) {
+  const customer = customers.find(customer => customer.id === customerId);
+  const orderSums = [];
+  let totalSums = 0.0;
 
+  if (!customer) {
+    return console.log('Customer not found');
+  }
+
+  const myOrdersIds = orders
+    .filter(order => order.customerId === customerId)
+    .map(myOrder => myOrder.id);
+
+  myOrdersIds.forEach(myOrderId => {
+    orderSums.push(
+      Math.round(
+        orderItems
+          .filter(orderItem => orderItem.orderId === myOrderId)
+          .map(myOrderItem => myOrderItem.price * myOrderItem.quantity)
+          .reduce((acc, val) => acc + val, 0) * 100
+      ) / 100 //Kaufmännisch runden
+    );
+  });
+
+  totalSums = orderSums.reduce((acc, val) => acc + val, 0);
+
+  return console.log(
+    `${customer.name} hat bisher einen Umsatz von ${totalSums.toFixed(2)}€`
+  );
+};
+
+const getTotalProductsSelled = function (productID) {
+  const product = products.find(product => product.id === productID);
+
+  if (!product) return console.log('Product not found!');
+
+  let productTotalSum = 0.0;
+  let productTotalSelled = 0;
+
+  const productOrderItemsArray = orderItems.filter(
+    orderItem => orderItem.productId === productID
+  );
+
+  productTotalSum = productOrderItemsArray
+    .map(order => order.price * order.quantity)
+    .reduce((acc, val) => acc + val, 0);
+
+  productTotalSelled = productOrderItemsArray
+    .map(order => order.quantity)
+    .reduce((acc, val) => acc + val, 0);
+
+  return console.log(
+    `${
+      product.name
+    } wurde insgesamt ${productTotalSelled}x verkauft und hat einen Umsatz von ${productTotalSum.toFixed(
+      2
+    )}€ erzielt`
+  );
+};
+
+//getCustomersTotalSpending(2);
 //getTotalProductsSelled(2);
+
+//aus der Order die customerID auslesen un die dazugehörige "order"id. Danach die Order ID's eines Nutzers in den orderItems suchen und alle zusammen addieren. Danach per customerID den Namen auslesen und alles ausgeben
 
 //////////////////////////////////////////////////////////////////////////
 
-// const getTotalAmount = function (productId) {
-//   const product = getProduct(productId);
+const getTotalAmount = function (productId) {
+  const product = getProduct(productId);
 
-//   if (!product) return 'Product not found!';
+  if (!product) return 'Product not found!';
 
-//   let productTotalAmount = 0.0;
+  let productTotalAmount = 0.0;
 
-//   const productOrderItemsArray = orderItems.filter(
-//     orderItem => orderItem.productId === productId
-//   );
+  const productOrderItemsArray = orderItems.filter(
+    orderItem => orderItem.productId === productId
+  );
 
-//   productTotalAmount = productOrderItemsArray
-//     .map(order => order.price * order.quantity)
-//     .reduce((acc, val) => acc + val, 0);
+  productTotalAmount = productOrderItemsArray
+    .map(order => order.price * order.quantity)
+    .reduce((acc, val) => acc + val, 0);
 
-//   return Number(productTotalAmount.toFixed(2));
-// };
+  return Number(productTotalAmount.toFixed(2));
+};
 
-// const getTotalUnitsSold = function (productId) {
-//   const product = getProduct(productId);
+const getTotalUnitsSold = function (productId) {
+  const product = getProduct(productId);
 
-//   if (!product) return 'Product not found!';
+  if (!product) return 'Product not found!';
 
-//   let productTotalUnitSold = 0;
+  let productTotalUnitSold = 0;
 
-//   const productOrderItemsArray = orderItems.filter(
-//     orderItem => orderItem.productId === productId
-//   );
+  const productOrderItemsArray = orderItems.filter(
+    orderItem => orderItem.productId === productId
+  );
 
-//   productTotalUnitSold = productOrderItemsArray
-//     .map(order => order.quantity)
-//     .reduce((acc, val) => acc + val, 0);
+  productTotalUnitSold = productOrderItemsArray
+    .map(order => order.quantity)
+    .reduce((acc, val) => acc + val, 0);
 
-//   return productTotalUnitSold;
-// };
+  return productTotalUnitSold;
+};
 
-// const getLowestUnitsOrder = function (productId) {
-//   const product = getProduct(productId);
+const getLowestUnitsOrder = function (productId) {
+  const product = getProduct(productId);
 
-//   if (!product) return 'Product not found!';
+  if (!product) return 'Product not found!';
 
-//   let lowestUnitsOrder = 0;
+  let lowestUnitsOrder = 0;
 
-//   const productOrderItemsArray = orderItems.filter(
-//     orderItem => orderItem.productId === productId
-//   );
+  const productOrderItemsArray = orderItems.filter(
+    orderItem => orderItem.productId === productId
+  );
 
-//   lowestUnitsOrder = Math.min(
-//     ...productOrderItemsArray.map(order => order.quantity)
-//   );
+  lowestUnitsOrder = Math.min(
+    ...productOrderItemsArray.map(order => order.quantity)
+  );
 
-//   return lowestUnitsOrder;
-// };
+  return lowestUnitsOrder;
+};
 
-// const getHighestUnitsOrder = function (productId) {
-//   const product = getProduct(productId);
+const getHighestUnitsOrder = function (productId) {
+  const product = getProduct(productId);
 
-//   if (!product) return 'Product not found!';
+  if (!product) return 'Product not found!';
 
-//   let highestUnitsOrder = 0;
+  let highestUnitsOrder = 0;
 
-//   const productOrderItemsArray = orderItems.filter(
-//     orderItem => orderItem.productId === productId
-//   );
+  const productOrderItemsArray = orderItems.filter(
+    orderItem => orderItem.productId === productId
+  );
 
-//   highestUnitsOrder = Math.max(
-//     ...productOrderItemsArray.map(order => order.quantity)
-//   );
+  highestUnitsOrder = Math.max(
+    ...productOrderItemsArray.map(order => order.quantity)
+  );
 
-//   return highestUnitsOrder;
-// };
+  return highestUnitsOrder;
+};
 
-// const getProductName = function (productId) {
-//   const product = getProduct(productId);
-//   return product ? product.name : 'Product not found';
-// };
+const getProductName = function (productId) {
+  const product = getProduct(productId);
+  return product ? product.name : 'Product not found';
+};
 
-// const getProduct = function (productId) {
-//   const product = products.find(product => product.id === productId);
-//   return product ? product : undefined;
-// };
+const getProduct = function (productId) {
+  const product = products.find(product => product.id === productId);
+  return product ? product : undefined;
+};
 
-// function getProductReportObj(productId) {
-//   const setProduct = function (productId) {
-//     return products.find(product => product.id === productId);
-//   };
+/////////////////////////////////////////////////////////////////////////////////////
 
-//   const productReport = {
-//     // setProduct: function (productId) {
-//     //   this.product = ;
-//     // },
+const getOrderYears = function () {
+  const yearsSet = new Set(
+    orderItems.map(orderItem => orderItem.orderDate.slice(0, 4)).sort()
+  );
+  const uniqueYears = Array.from(yearsSet);
+  return uniqueYears;
+};
 
-//     product: this.setProduct(productId),
-//     totalAmount: 0.0,
-//     totalUnitsSold: 0,
-//     lowestUnitsOnOrder: 0.0,
-//     highestUnitsOnOrder: 0.0,
-//   };
-//   return productReport;
-// }
+const getOrdersInYear = function (year) {
+  if (!year) return console.log('forgot year');
+  return orderItems.filter(
+    orderItem => orderItem.orderDate.slice(0, 4) === String(year)
+  );
+};
 
-//   productReport.name = getProductName(productId);
-//   productReport.totalAmount = getTotalAmount(productId);
-//   productReport.totalUnitsSold = getTotalUnitsSold(productId);
-//   productReport.lowestUnitsOnOrder = getLowestUnitsOrder(productId);
-//   productReport.highestUnitsOnOrder = getHighestUnitsOrder(productId);
-//   console.table(productReport);
-//   console.log(
-//     `${productReport.name} wurde bisher ${productReport.totalUnitsSold}x verkauft. Der Gesamtumsatz beträgt ${productReport.totalAmount}€. Die niedrigste Bestellung war ${productReport.lowestUnitsOnOrder} Teil und die höchse ${productReport.highestUnitsOnOrder} Teile.`
-//   );
-// }
+const getTotalAmountYear = function (year) {
+  return (
+    Math.round(
+      getOrdersInYear(year)
+        .map(orderItem => orderItem.price * orderItem.quantity)
+        .reduce((acc, val) => acc + val, 0) * 100
+    ) / 100 // Kaufmännsiches Runden
+  );
+};
 
-// console.log(getProductReportObj(3));
+const getTotalAmountsYearMap = function () {
+  const orderYears = getOrderYears();
+  const totalAmountsYearMap = new Map();
+  orderYears.forEach(year =>
+    totalAmountsYearMap.set(year, getTotalAmountYear(year))
+  );
+  return totalAmountsYearMap;
+};
 
-//soll sub funktionen für jedes einzelen Property aufrufen
+const getYearWithHighestTotalAmount = function () {
+  const totalAmountsYear = getTotalAmountsYearMap();
+  let maxAmount = 0.0;
+  let maxYear = '';
+  let maxAmountAndYear = new Map();
+
+  totalAmountsYear.forEach((value, key) => {
+    if (value > maxAmount) {
+      maxAmount = value;
+      maxYear = key;
+    }
+  });
+  maxAmountAndYear.set('year', maxYear);
+  maxAmountAndYear.set('amount', maxAmount);
+  return maxAmountAndYear;
+};
+
+const getYearWithLowestTotalAmount = function () {
+  const totalAmountsYear = getTotalAmountsYearMap();
+  let minAmount = Infinity;
+  let minYear = '';
+  let minAmountAndYear = new Map();
+
+  totalAmountsYear.forEach((value, key) => {
+    if (value < minAmount) {
+      minAmount = value;
+      minYear = key;
+    }
+  });
+  minAmountAndYear.set('year', minYear);
+  minAmountAndYear.set('amount', minAmount);
+  return minAmountAndYear;
+};
+
+function getProductReportObj(productId) {
+  const productReport = {
+    name: '',
+    totalAmount: 0.0,
+    totalUnitsSold: 0,
+    lowestUnitsOnOrder: 0,
+    highestUnitsOnOrder: 0,
+  };
+
+  productReport.name = getProductName(productId);
+  productReport.totalAmount = getTotalAmount(productId);
+  productReport.totalUnitsSold = getTotalUnitsSold(productId);
+  productReport.lowestUnitsOnOrder = getLowestUnitsOrder(productId);
+  productReport.highestUnitsOnOrder = getHighestUnitsOrder(productId);
+  console.table(productReport);
+  console.log(
+    `${productReport.name} wurde bisher ${productReport.totalUnitsSold}x verkauft. Der Gesamtumsatz beträgt ${productReport.totalAmount}€. Die niedrigste Bestellung war ${productReport.lowestUnitsOnOrder} Teil und die höchste ${productReport.highestUnitsOnOrder} Teile.`
+  );
+}
+
+getProductReportObj(2);
+
+function getYearReport() {
+  const yearReport = {
+    bestYear: '',
+    worstYear: '',
+  };
+  yearReport.bestYear = getYearWithHighestTotalAmount();
+  yearReport.worstYear = getYearWithLowestTotalAmount();
+
+  console.log(
+    `Das Beste Jahr war ${yearReport.bestYear.get(
+      'year'
+    )} mit einem Umsatz von ${yearReport.bestYear.get(
+      'amount'
+    )}€ und das schlechteste Jahr war ${yearReport.worstYear.get(
+      'year'
+    )} mit einem Umsatzu von ${yearReport.worstYear.get('amount')}€`
+  );
+}
+
+getYearReport();
