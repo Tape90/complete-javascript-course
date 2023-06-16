@@ -260,6 +260,8 @@ const customers = [
   // Add more customers as needed
 ];
 
+//Standort, Mitarbeiter pro Standtort und dann Auswerten
+
 // Mock data for order items
 
 //Erweitern um z.B. Datum und dann das Beste und schlechteste Jahr auslesen
@@ -456,7 +458,7 @@ const orders = [
 ];
 
 //Wie viel Geld hat jeder Kunde bisher ausgegeben?
-
+/*
 const getCustomersTotalSpending = function (customerId) {
   const customer = customers.find(customer => customer.id === customerId);
   const orderSums = [];
@@ -516,9 +518,6 @@ const getTotalProductsSelled = function (productID) {
     )}€ erzielt`
   );
 };
-
-//getCustomersTotalSpending(2);
-//getTotalProductsSelled(2);
 
 //aus der Order die customerID auslesen un die dazugehörige "order"id. Danach die Order ID's eines Nutzers in den orderItems suchen und alle zusammen addieren. Danach per customerID den Namen auslesen und alles ausgeben
 
@@ -696,7 +695,7 @@ function getProductReportObj(productId) {
   );
 }
 
-getProductReportObj(2);
+//getProductReportObj(2);
 
 function getYearReport() {
   const yearReport = {
@@ -716,5 +715,93 @@ function getYearReport() {
     )} mit einem Umsatzu von ${yearReport.worstYear.get('amount')}€`
   );
 }
+*/
+//getYearReport();
+//console.table(customers);
+//console.table(orders);
+// console.table(orderItems);
 
-getYearReport();
+/////////////////////////////////////////////////////////////////
+// Entwicklung Kunde pro Jahr
+
+function getCustomerById(customerId) {
+  const customer = customers.find(customer => customer.id === customerId);
+  return customer;
+}
+
+function getOrderByCustomerId(customerId) {
+  const customerOrders = [];
+  orders.filter(order => {
+    if (order.customerId === customerId) customerOrders.push(order.id);
+  });
+  return customerOrders;
+}
+
+function getOrderItemsByOrderId(incArray) {
+  const customerOrderItems = [];
+  if (!Array.isArray(incArray)) incArray = Array.from(incArray);
+  incArray.forEach(array => {
+    orderItems.filter(orderItem => {
+      if (orderItem.orderId === array) {
+        customerOrderItems.push(orderItem);
+      }
+    });
+  });
+  return customerOrderItems;
+}
+
+function getOrderYearsByOrderItems(incOrderItems) {
+  const yearsSet = new Set(
+    incOrderItems.map(orderItem => orderItem.orderDate.slice(0, 4)).sort()
+  );
+  const uniqueYears = Array.from(yearsSet);
+  return uniqueYears;
+}
+
+function getOrdersInYearByOrderItems(years, incOrderItems) {
+  let ordersInYears = new Map();
+  years.forEach(year => {
+    ordersInYears.set(year, []);
+    incOrderItems.filter(orderItem => {
+      if (orderItem.orderDate.slice(0, 4) === year) {
+        ordersInYears.get(year).push(orderItem);
+      }
+    });
+  });
+  return ordersInYears;
+}
+
+function getTotalAmountEachYear(sortedOrderItems) {
+  let totalAmountsYears = new Map();
+
+  for (let [key, value] of sortedOrderItems) {
+    let amount =
+      Math.round(
+        value.reduce((acc, val) => acc + val.price * val.quantity, 0) * 100
+      ) / 100; //Kaufmännsiches Runden
+    totalAmountsYears.set(key, amount);
+  }
+  return totalAmountsYears;
+}
+
+class CustomerReport {
+  constructor(customerId) {
+    this.customerId = customerId;
+    this.customer = getCustomerById(this.customerId);
+    this.orders = getOrderByCustomerId(this.customerId);
+    this.orderItems = getOrderItemsByOrderId(this.orders);
+    this.orderYears = getOrderYearsByOrderItems(this.orderItems);
+    this.sortedOrdersInYears = getOrdersInYearByOrderItems(
+      this.orderYears,
+      this.orderItems
+    );
+    this.totalAmountEachYears = getTotalAmountEachYear(
+      this.sortedOrdersInYears
+    );
+  }
+}
+
+const customerOneReport = new CustomerReport(1);
+const customerTwoReport = new CustomerReport(2);
+console.log(customerOneReport);
+console.log(customerTwoReport);
